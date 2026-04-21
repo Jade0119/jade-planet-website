@@ -1,0 +1,3720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>The Planet of Jade - 玉桂狗星球</title>
+    <link rel="icon" href="yuguigou1.webp" type="image/webp">
+    
+    <style>
+        :root {
+            --primary: #87ceeb;
+            --secondary: #ffb6c1;
+            --gold: #ffd700;
+            --accent: #ff69b4;
+            --success: #6cc24a;
+            --text: #2c3e50;
+            --light-text: #5a6c7d;
+            --bg: #f0f8ff;
+            --bg-overlay: rgba(135, 206, 235, 0.15);
+            --shadow: 0 4px 6px rgba(135,206,235,0.15), 0 1px 3px rgba(135,206,235,0.1);
+            --shadow-hover: 0 12px 20px rgba(135,206,235,0.25);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --border-radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.2s ease;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+
+        body {
+            background: #f0f8ff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: var(--text);
+        }
+
+
+        #guidePage { display: flex; }
+        #mainPage { display: none; }
+
+
+        /* ===== 星星动画 ===== */
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.15;
+            }
+            50% {
+                opacity: 0.25;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0.15;
+            }
+        }
+
+
+        .bg-float-guide, .bg-float-main {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+
+        .float-item {
+            position: absolute;
+            opacity: 0.2;
+            color: var(--gold);
+            will-change: transform;
+            animation: float 15s linear infinite;
+            filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.3));
+        }
+
+
+        /* ===== 引导页样式 ===== */
+        #guidePage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+        }
+
+
+        .entry-card {
+            background: white;
+            padding: 50px 60px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 40px rgba(135, 206, 235, 0.25);
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            animation: slideUp 0.6s ease;
+        }
+
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .entry-card h1 {
+            color: var(--primary);
+            font-size: 42px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            white-space: nowrap;
+            animation: fadeInScale 0.8s ease 0.2s both;
+        }
+
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ========== 修复1：固定玉桂狗贴纸，删除跳动动画 ========== */
+        .entry-card h1 img {
+            width: 100px;
+            height: auto;
+            flex-shrink: 0;
+            filter: drop-shadow(0 4px 8px rgba(135, 206, 235, 0.3));
+            /* 移除transition，彻底固定 */
+        }
+        /* 删除了原有的hover动画，解决跳动问题 */
+
+
+        .question {
+            font-size: 22px;
+            color: var(--light-text);
+            margin: 30px 0;
+            font-weight: 500;
+            animation: fadeInScale 0.8s ease 0.4s both;
+        }
+
+
+        .btn-group {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInScale 0.8s ease 0.6s both;
+        }
+
+
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+
+        .yes-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            color: white;
+        }
+
+
+        .yes-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.4);
+        }
+
+
+        .no-btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff9ec9 100%);
+            color: white;
+        }
+
+
+        .no-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+        }
+
+
+        /* ===== 模态框样式 ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 400px;
+            width: 85%;
+            position: relative;
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+
+        .modal-content p {
+            font-size: 18px;
+            color: var(--light-text);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+
+        .modal-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+
+        .modal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.4);
+        }
+
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: bold;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+
+        .modal-close:hover {
+            background: rgba(135, 206, 235, 0.1);
+            transform: rotate(90deg);
+        }
+
+
+        /* ===== 主页样式 ===== */
+        #mainPage {
+            display: none;
+            background: url('beijing.jpg') no-repeat center center fixed !important;
+            background-size: cover !important;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-overlay);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+
+        /* ===== 提示框 ===== */
+        .custom-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px 35px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-hover);
+            z-index: 99999;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        .custom-toast.show {
+            opacity: 1;
+            visibility: visible;
+            animation: toastBounce 0.6s ease;
+        }
+
+
+        @keyframes toastBounce {
+            0% {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+
+        /* ===== 音乐引导框 ===== */
+        .music-guide-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(8px);
+            padding: 20px;
+        }
+
+
+        .music-guide-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .music-guide-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease;
+            border: 1px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        .music-guide-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 0.8s ease infinite;
+        }
+
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+
+        .music-guide-title {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+
+        .music-guide-desc {
+            font-size: 16px;
+            color: var(--light-text);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+
+        .music-guide-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+
+        .music-guide-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.4);
+        }
+
+
+        /* ===== 确认框 ===== */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+
+
+        .confirm-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .confirm-box {
+            background: white;
+            padding: 35px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        .confirm-box p {
+            color: var(--light-text);
+            margin-bottom: 25px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+
+        .confirm-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+
+        .confirm-yes, .confirm-no {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+            font-size: 15px;
+        }
+
+
+        .confirm-yes {
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+
+        .confirm-yes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(135, 206, 235, 0.4);
+        }
+
+
+        .confirm-no {
+            background: #f0f0f0;
+            color: var(--light-text);
+            border: 1px solid #e0e0e0;
+        }
+
+
+        .confirm-no:hover {
+            background: #e8e8e8;
+        }
+
+
+        /* ===== 介绍模态框 ===== */
+        .intro-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+        }
+
+
+        .intro-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .intro-modal .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            width: 90%;
+            max-width: 750px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            transform: scale(0.8);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        .intro-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+
+        .modal-photo {
+            width: 220px;
+            flex-shrink: 0;
+            animation: slideInLeft 0.6s ease 0.2s both;
+        }
+
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+        .modal-info {
+            flex: 1;
+            min-width: 280px;
+            line-height: 1.8;
+            font-size: 17px;
+            color: var(--light-text);
+            text-align: center;
+            animation: slideInRight 0.6s ease 0.3s both;
+        }
+
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+        .modal-info h2 {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .modal-info h2 img {
+            width: 40px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(135, 206, 235, 0.3));
+        }
+
+
+        .enter-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            display: inline-block;
+        }
+
+
+        .enter-btn:hover {
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff9ec9 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 182, 193, 0.3);
+        }
+
+
+        /* ===== 导航贴纸 ===== */
+        .sticker-nav {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1000px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.6s ease;
+        }
+
+
+        .sticker-nav.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .sticker-item {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(135, 206, 235, 0.1);
+            animation: stickerPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+        }
+
+
+        @keyframes stickerPop {
+            from {
+                opacity: 0;
+                transform: scale(0) rotate(-45deg);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
+        }
+
+
+        .sticker-item:nth-child(1) { animation-delay: 0s; }
+        .sticker-item:nth-child(2) { animation-delay: 0.1s; }
+        .sticker-item:nth-child(3) { animation-delay: 0.2s; }
+        .sticker-item:nth-child(4) { animation-delay: 0.3s; }
+        .sticker-item:nth-child(5) { animation-delay: 0.4s; }
+        .sticker-item:nth-child(6) { animation-delay: 0.5s; }
+
+
+        .sticker-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+
+        .sticker-item:nth-child(1) { transform: translateY(0) rotate(-3deg); }
+        .sticker-item:nth-child(2) { transform: translateY(10px) rotate(2deg); }
+        .sticker-item:nth-child(3) { transform: translateY(-5px) rotate(-2deg); }
+        .sticker-item:nth-child(4) { transform: translateY(8px) rotate(3deg); }
+        .sticker-item:nth-child(5) { transform: translateY(-3px) rotate(-1deg); }
+        .sticker-item:nth-child(6) { transform: translateY(12px) rotate(1deg); }
+
+
+        .sticker-item:hover {
+            transform: translateY(-12px) scale(1.15) rotate(0deg) !important;
+            box-shadow: 0 15px 40px rgba(135, 206, 235, 0.3);
+        }
+
+
+        .sticker-item:hover::before {
+            opacity: 1;
+        }
+
+
+        .sticker-item img {
+            width: 50px;
+            height: auto;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+
+
+        .sticker-item:hover img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* ========== 修复2：贴纸文字改为浅蓝色 ========== */
+        .sticker-name-sm {
+            font-size: 12px;
+            color: var(--primary); /* 主题浅蓝色 */
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+
+        /* ===== 返回首页按钮 ===== */
+        .back-home {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 65px;
+            height: 65px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            border: 1px solid rgba(135, 206, 235, 0.1);
+        }
+
+
+        .back-home.active {
+            opacity: 1;
+            visibility: visible;
+            animation: slideInDown 0.4s ease;
+        }
+
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .back-home:hover {
+            transform: scale(1.12);
+            box-shadow: var(--shadow-hover);
+        }
+
+
+        .back-home img {
+            width: 40px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            cursor: pointer;
+        }
+
+
+        .back-home p {
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+
+        /* ===== 页面容器 ===== */
+        .page-container {
+            padding: 20px;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto 150px;
+            position: relative;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: 1;
+        }
+
+
+        .page-container.active {
+            opacity: 1;
+        }
+
+
+        .page-module {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(30px);
+            transition: var(--transition);
+        }
+
+
+        .page-module.active {
+            position: relative;
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+
+        /* ===== 卡片样式 ===== */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid rgba(135, 206, 235, 0.1);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+
+        .section-title {
+            color: var(--primary);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 35px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            width: 60px;
+            top: 50%;
+        }
+
+
+        .section-title::before {
+            right: 100%;
+            margin-right: 20px;
+        }
+
+
+        .section-title::after {
+            left: 100%;
+            margin-left: 20px;
+        }
+
+
+        .section-title img {
+            width: 38px;
+            height: auto;
+            filter: drop-shadow(0 2px 6px rgba(135, 206, 235, 0.3));
+        }
+
+
+        /* ===== 照片框 ===== */
+        .photo-box {
+            background: linear-gradient(135deg, #f5fbff 0%, #e8f7ff 100%);
+            border: 3px dashed var(--primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: bold;
+            overflow: hidden;
+            transition: var(--transition);
+            aspect-ratio: 1/1;
+            width: 100%;
+            position: relative;
+            cursor: zoom-in;
+        }
+
+
+        .photo-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+
+        .photo-box:hover {
+            border-style: solid;
+            transform: scale(1.02);
+            box-shadow: inset 0 0 15px rgba(135, 206, 235, 0.1), 0 8px 20px rgba(135, 206, 235, 0.15);
+        }
+
+
+        .photo-box:hover::before {
+            opacity: 1;
+        }
+
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: filter 0.3s ease;
+        }
+
+
+        .photo-box:hover img {
+            filter: brightness(1.05);
+        }
+
+
+        .photo-3-4 { aspect-ratio: 3/4; }
+        .photo-4-3 { aspect-ratio: 4/3; }
+        .photo-16-9 { aspect-ratio: 16/9; }
+
+
+        /* ===== 照片放大弹窗 ===== */
+        .photo-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            /* 修复：提高 z-index，确保灯箱始终在最上层 */
+            z-index: 2147483647;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+
+        .photo-lightbox.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            animation: slideUp 0.4s ease;
+        }
+
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+
+        .lightbox-close {
+            /* 改为放在灯箱内部右上角，避免被遮挡 */
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(0,0,0,0.08);
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 2147483648;
+        }
+
+
+        .lightbox-close:hover {
+            transform: rotate(5deg);
+        }
+
+
+        /* ===== 描述文本框 ===== */
+        .desc-text-box {
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.08) 0%, rgba(135, 206, 235, 0.03) 100%);
+            border-radius: 16px;
+            padding: 25px;
+            line-height: 1.8;
+            font-size: 15px;
+            color: var(--light-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
+            border: 2px solid rgba(135, 206, 235, 0.3);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .desc-text-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.1), transparent);
+            opacity: 0;
+            animation: shimmer 3s infinite;
+        }
+
+
+        @keyframes shimmer {
+            0% { opacity: 0; transform: translateX(-100%); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+
+
+        .desc-text-box:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.12) 0%, rgba(135, 206, 235, 0.06) 100%);
+        }
+
+
+        /* ===== 音乐播放器 ===== */
+        .music-box {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 800;
+            text-align: center;
+        }
+
+
+        .cd-rotate {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            animation: cdRotate 5s linear infinite paused;
+            box-shadow: 0 6px 20px rgba(135, 206, 235, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            position: relative;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+
+        .cd-rotate::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, 0.5) 100%);
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .cd-rotate.playing {
+            box-shadow: 0 0 20px rgba(135, 206, 235, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.1);
+            filter: brightness(1.1);
+        }
+
+
+        .cd-rotate:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(135, 206, 235, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .cd-tip {
+            position: absolute;
+            left: 50%;
+            top: -50px;
+            transform: translateX(-50%);
+            background: white;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+            opacity: 0.9;
+            animation: tipFloat 2s ease-in-out infinite;
+            transform-origin: center;
+            will-change: transform;
+            z-index: 801;
+            border: 1px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        @keyframes tipFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+
+        .cd-rotate img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+
+        @keyframes cdRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+        .music-box p {
+            color: white;
+            font-size: 12px;
+            margin-top: 8px;
+            font-weight: bold;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+
+        /* ===== 首页 ===== */
+        .home-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            padding: 20px;
+        }
+
+
+        .home-info {
+            max-width: 800px;
+            line-height: 2;
+            font-size: 18px;
+            color: #ffffff;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 50px;
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(135, 206, 235, 0.2);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 0 4px rgba(135, 206, 235, 0.9), 0 0 8px rgba(135, 206, 235, 0.6);
+            animation: slideUp 0.8s ease;
+        }
+
+
+        .home-info h2 {
+            font-size: 44px;
+            color: #ffffff;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.4), 0 0 6px rgba(135, 206, 235, 1), 0 0 12px rgba(135, 206, 235, 0.7);
+            font-weight: bold;
+        }
+
+
+        .home-info h2 img {
+            width: 50px;
+            height: auto;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+            /* 修复：取消浮动动画，保持固定 */
+            animation: none !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
+
+        .home-info p {
+            font-weight: 500;
+            margin: 12px 0;
+        }
+
+
+        /* ===== 宿舍模块 ===== */
+        .dorm-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+
+        .dorm-item {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+
+
+        .dorm-item.reverse { flex-direction: row-reverse; }
+
+
+        .dorm-item .photo-box {
+            width: 280px;
+            height: 280px;
+            flex-shrink: 0;
+        }
+
+
+        .dorm-item .desc-text-box {
+            flex: 1;
+            min-height: 200px;
+        }
+
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        /* ===== 美食模块 ===== */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+
+        .food-item {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+            animation: fadeInUp 0.6s ease;
+        }
+
+
+        .food-item:nth-child(1) { animation-delay: 0.1s; }
+        .food-item:nth-child(2) { animation-delay: 0.2s; }
+        .food-item:nth-child(3) { animation-delay: 0.3s; }
+        .food-item:nth-child(4) { animation-delay: 0.4s; }
+        .food-item:nth-child(5) { animation-delay: 0.5s; }
+        .food-item:nth-child(6) { animation-delay: 0.6s; }
+
+
+        .food-item .photo-box {
+            aspect-ratio: 1/1;
+            width: 100%;
+        }
+
+
+        .food-item .desc-text-box {
+            width: 100%;
+            min-height: 120px;
+            text-align: center;
+            padding: 15px;
+        }
+
+
+        /* ===== 游戏模块 ===== */
+        .game-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+
+        .game-top-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            align-items: center;
+        }
+
+
+        .game-steam-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+
+        .game-steam-item {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+
+
+        .game-steam-item.reverse { flex-direction: row-reverse; }
+
+
+        .game-steam-item .photo-box {
+            width: 280px;
+            height: 280px;
+            flex-shrink: 0;
+        }
+
+
+        .game-steam-item .desc-text-box {
+            flex: 1;
+            min-height: 150px;
+        }
+
+
+        /* ===== 生活模块 ===== */
+        .life-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+
+        .life-item {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+
+
+        .life-item.reverse { flex-direction: row-reverse; }
+
+
+        .life-item .photo-box {
+            width: 280px;
+            height: 280px;
+            flex-shrink: 0;
+        }
+
+
+        .life-item .desc-text-box {
+            flex: 1;
+            min-height: 120px;
+        }
+
+
+        /* ===== 留言模块 ===== */
+        .message-card {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+
+        .cinnamoroll-stickers {
+            background: linear-gradient(135deg, #fef7fb 0%, #fff0f7 100%);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.15);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+        }
+
+
+        .stickers-title {
+            color: var(--secondary);
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+
+        .stickers-hint {
+            text-align: center;
+            color: var(--secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+
+        .stickers-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+        }
+
+
+        .sticker-item-sm {
+            background: white;
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 182, 193, 0.1);
+            cursor: pointer;
+            position: relative;
+        }
+
+
+        .sticker-item-sm:hover {
+            transform: scale(1.08) rotate(2deg);
+            box-shadow: 0 6px 16px rgba(255, 182, 193, 0.2);
+        }
+
+
+        .sticker-item-sm img {
+            width: 45px;
+            height: auto;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+            transition: transform 0.3s ease;
+        }
+
+
+        .sticker-item-sm:hover img {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        /* ========== 统一小贴纸文字样式 ========== */
+        .sticker-name-sm {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+
+        .sticker-unlock-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff9ec9 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
+        }
+
+
+        /* ===== 留言表单 ===== */
+        .message-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+
+        .message-form input,
+        .message-form textarea {
+            padding: 14px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+            background: #fafbfc;
+            color: var(--text);
+        }
+
+
+        .message-form input::placeholder,
+        .message-form textarea::placeholder {
+            color: #bbb;
+        }
+
+
+        .message-form input:focus,
+        .message-form textarea:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.1), inset 0 0 10px rgba(135, 206, 235, 0.05);
+        }
+
+
+        .message-form textarea {
+            resize: none;
+            height: 140px;
+            font-family: inherit;
+        }
+
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #5ba3d0 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            align-self: flex-end;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff9ec9 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(135, 206, 235, 0.3);
+        }
+
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+
+        /* ===== 留言列表 ===== */
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+
+        .message-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+
+        .message-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+
+        .message-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary) 0%, #5ba3d0 100%);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+
+        .message-list::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #5ba3d0 0%, var(--primary) 100%);
+        }
+
+
+        .empty-msg {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--light-text);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+
+        .message-item {
+            background: linear-gradient(135deg, #f8fcff 0%, #f0f9ff 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            transition: var(--transition);
+            border: 1px solid rgba(135, 206, 235, 0.1);
+            animation: fadeInLeft 0.5s ease;
+        }
+
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+        .message-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 16px rgba(135, 206, 235, 0.15);
+        }
+
+
+        .msg-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(135, 206, 235, 0.2);
+        }
+
+
+        .msg-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .msg-body {
+            flex: 1;
+        }
+
+
+        .msg-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+
+        .msg-nickname {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+
+        .msg-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+
+        .msg-content {
+            color: var(--light-text);
+            line-height: 1.6;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+
+        .msg-actions {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+
+        .like-btn,
+        .del-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+
+        .like-btn:hover {
+            color: #ff1493;
+            transform: scale(1.1);
+        }
+
+
+        .del-btn {
+            color: #ff6b6b;
+        }
+
+
+        .del-btn:hover {
+            color: #ff3333;
+            transform: scale(1.1);
+        }
+
+
+        /* ===== 彩蛋模态框 ===== */
+        .easter-egg-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.4) 0%, rgba(135, 206, 235, 0.4) 100%);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            padding: 20px;
+        }
+
+
+        .easter-egg-modal.active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+            animation: eggBgAppear 0.6s ease;
+        }
+
+
+        @keyframes eggBgAppear {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(12px);
+            }
+        }
+
+
+        .egg-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2),
+                        0 0 50px rgba(255, 182, 193, 0.3);
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            position: relative;
+            animation: eggContentPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+
+        @keyframes eggContentPop {
+            0% {
+                transform: scale(0.6) rotateX(-20deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotateX(0);
+                opacity: 1;
+            }
+        }
+
+
+        .egg-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: linear-gradient(135deg, var(--secondary) 0%, #ff9ec9 100%);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 182, 193, 0.3);
+        }
+
+
+        .egg-close:hover {
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4);
+        }
+
+
+        .egg-unlock-ani {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease 0.2s both;
+        }
+
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .unlock-icon {
+            font-size: 50px;
+            display: block;
+            margin-bottom: 15px;
+            animation: bounce 0.6s ease infinite;
+        }
+
+
+        .egg-unlock-ani h2 {
+            color: var(--secondary);
+            font-size: 24px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(255, 182, 193, 0.2);
+        }
+
+
+        .egg-unlock-ani p {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+
+        .egg-body {
+            animation: slideUp 0.6s ease 0.3s both;
+        }
+
+
+        /* 随笔样式 */
+        .essay-container {
+            padding: 20px 0;
+        }
+
+
+        .essay-container h3 {
+            text-align: center;
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+
+        .essay-text {
+            line-height: 2;
+            font-size: 15px;
+            color: var(--light-text);
+            text-align: justify;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+
+        .essay-text p {
+            text-indent: 2em;
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.05) 0%, transparent 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+
+        .essay-text p:hover {
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.1) 0%, rgba(135, 206, 235, 0.05) 100%);
+            box-shadow: inset 0 0 10px rgba(135, 206, 235, 0.1);
+        }
+
+
+        /* 照片库样式 */
+        .gallery-container {
+            padding: 10px 0;
+        }
+
+
+        .photo-gallery-6 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+
+        .gallery-photo {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            animation: fadeInUp 0.6s ease both;
+            aspect-ratio: 1/1;
+        }
+
+
+        .gallery-photo:nth-child(1) { animation-delay: 0.1s; }
+        .gallery-photo:nth-child(2) { animation-delay: 0.15s; }
+        .gallery-photo:nth-child(3) { animation-delay: 0.2s; }
+        .gallery-photo:nth-child(4) { animation-delay: 0.25s; }
+        .gallery-photo:nth-child(5) { animation-delay: 0.3s; }
+        .gallery-photo:nth-child(6) { animation-delay: 0.35s; }
+
+
+        .gallery-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+
+        .gallery-photo:hover img {
+            transform: scale(1.1) rotate(2deg);
+            filter: brightness(1.1);
+        }
+
+
+        .gallery-photo p {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.9) 0%, rgba(255, 182, 193, 0.7) 100%);
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+
+        .gallery-photo:hover p {
+            transform: translateY(0);
+        }
+
+
+        /* 奶茶券样式 */
+        .coupon-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+
+        .coupon-card {
+            background: linear-gradient(135deg, #fff5f9 0%, #f5fbff 100%);
+            border: 3px dashed var(--secondary);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(255, 182, 193, 0.2);
+            animation: couponFlip 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+
+        @keyframes couponFlip {
+            0% {
+                transform: perspective(1000px) rotateY(-90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: perspective(1000px) rotateY(0);
+                opacity: 1;
+            }
+        }
+
+
+        .coupon-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--secondary);
+        }
+
+
+        .coupon-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+
+        .coupon-emoji {
+            font-size: 32px;
+            display: block;
+        }
+
+
+        .coupon-content {
+            text-align: center;
+        }
+
+
+        .coupon-text {
+            font-size: 16px;
+            color: var(--text);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+
+        .coupon-text span {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+
+        .coupon-rules {
+            background: rgba(255, 182, 193, 0.1);
+            border-left: 3px solid var(--secondary);
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: var(--light-text);
+            line-height: 1.8;
+        }
+
+
+        .coupon-footer {
+            color: var(--secondary);
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+
+        .coupon-number {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 12px;
+            color: rgba(255, 182, 193, 0.5);
+            font-weight: bold;
+            rotation: -15deg;
+        }
+
+
+        /* 秘籍样式 */
+        .recipe-container {
+            padding: 10px 0;
+        }
+
+
+        .recipe-container h3 {
+            text-align: center;
+            font-size: 22px;
+            color: var(--secondary);
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+
+        .recipe-card {
+            background: linear-gradient(135deg, #fff5f9 0%, rgba(255, 182, 193, 0.05) 100%);
+            border-left: 4px solid var(--secondary);
+            padding: 16px 18px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+            line-height: 2;
+        }
+
+
+        .recipe-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 16px rgba(255, 182, 193, 0.15);
+        }
+
+
+        .recipe-card h4 {
+            color: var(--secondary);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+
+        .recipe-card p {
+            color: var(--light-text);
+            font-size: 15px;
+            line-height: 1.8;
+            margin: 5px 0;
+            padding-left: 8px;
+        }
+
+
+        .recipe-card strong {
+            color: var(--text);
+        }
+
+
+        .recipe-tips {
+            background: linear-gradient(135deg, rgba(135, 206, 235, 0.1) 0%, rgba(135, 206, 235, 0.05) 100%);
+            border-left: 4px solid var(--primary);
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--light-text);
+            line-height: 1.8;
+        }
+
+
+        /* 火鸡面样式 */
+        .food-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+
+        .food-card {
+            background: linear-gradient(135deg, #fff9f5 0%, #fffbf8 100%);
+            border: 2px solid #ffb6c1;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.6s ease;
+        }
+
+
+        .food-warning {
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.2) 0%, rgba(255, 107, 107, 0.1) 100%);
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+
+        .food-warning p {
+            color: var(--secondary);
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+
+        .food-message {
+            margin: 20px 0;
+        }
+
+
+        .food-message p {
+            font-size: 16px;
+            color: var(--light-text);
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+
+
+        .food-message p:first-child {
+            font-size: 18px;
+            color: var(--text);
+            font-weight: bold;
+        }
+
+
+        .food-image {
+            margin: 25px 0;
+            aspect-ratio: 1/1;
+            background: linear-gradient(135deg, #f5fbff 0%, #e8f7ff 100%);
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+
+        .food-image:hover {
+            transform: scale(1.02);
+            border-style: solid;
+        }
+
+
+        .food-image img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.2);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+
+        .food-image:hover img {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+
+        .image-caption {
+            font-size: 13px;
+            color: #999;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+
+        .food-footer {
+            background: rgba(135, 206, 235, 0.08);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+
+        .food-footer p {
+            font-size: 15px;
+            color: var(--light-text);
+            margin: 8px 0;
+        }
+
+
+        .food-footer p:first-child {
+            color: var(--text);
+            font-weight: bold;
+        }
+
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.2) 0%, rgba(135, 206, 235, 0.1) 100%);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+
+        #home.page-module.active {
+            min-height: 100vh;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+        }
+
+
+        #home .card {
+            display: none;
+        }
+
+
+        /* ===== 响应式设计 ===== */
+        @media (max-width: 1024px) {
+            .section-title::before,
+            .section-title::after {
+                display: none;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .dorm-item,
+            .dorm-item.reverse,
+            .life-item,
+            .life-item.reverse,
+            .game-steam-item,
+            .game-steam-item.reverse {
+                flex-direction: column;
+                gap: 25px;
+            }
+
+
+            .dorm-item .photo-box,
+            .game-steam-item .photo-box,
+            .life-item .photo-box {
+                width: 250px;
+                height: 250px;
+            }
+
+
+            .food-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+
+            .game-top-row {
+                grid-template-columns: 1fr;
+            }
+
+
+            .stickers-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+
+
+            .photo-gallery-6 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+
+            .sticker-nav {
+                gap: 8px;
+                bottom: 15px;
+            }
+
+
+            .sticker-item {
+                width: 75px;
+                height: 75px;
+            }
+
+
+            .sticker-item img {
+                width: 40px;
+            }
+
+
+            .cd-tip {
+                font-size: 10px;
+                padding: 4px 8px;
+                top: -40px;
+            }
+
+
+            .entry-card h1 {
+                font-size: 32px;
+                gap: 12px;
+            }
+
+
+            .entry-card h1 img {
+                width: 70px;
+            }
+
+
+            .entry-card {
+                padding: 40px 25px;
+            }
+
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+
+
+            .card {
+                padding: 30px 20px;
+            }
+
+
+            .modal-info h2 {
+                font-size: 24px;
+            }
+
+
+            .home-info {
+                padding: 30px 25px;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+
+            .home-info h2 {
+                font-size: 32px;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+
+            .back-home {
+                width: 55px;
+                height: 55px;
+            }
+
+
+            .back-home img {
+                width: 32px;
+            }
+
+
+            .back-home p {
+                font-size: 10px;
+            }
+
+
+            .message-form input,
+            .message-form textarea {
+                font-size: 16px;
+            }
+
+
+            input, textarea, select, button {
+                font-size: 16px !important;
+            }
+
+
+            .music-guide-content {
+                max-width: 350px;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .stickers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+
+            .photo-gallery-6 {
+                grid-template-columns: 1fr;
+            }
+
+
+            .entry-card h1 {
+                font-size: 26px;
+                gap: 8px;
+            }
+
+
+            .entry-card h1 img {
+                width: 50px;
+            }
+
+
+            .question {
+                font-size: 18px;
+            }
+
+
+            .btn-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+
+            .btn {
+                width: 100%;
+                padding: 14px 20px;
+            }
+
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+
+            .modal-info {
+                min-width: 100%;
+            }
+
+
+            .intro-modal .modal-content {
+                gap: 20px;
+                padding: 25px;
+            }
+
+
+            .modal-photo {
+                width: 180px;
+            }
+
+
+            .home-info {
+                padding: 25px 15px;
+                font-size: 15px;
+            }
+
+
+            .home-info h2 {
+                font-size: 26px;
+            }
+
+
+            .home-info h2 img {
+                width: 35px;
+            }
+
+
+            .section-title {
+                font-size: 22px;
+                gap: 8px;
+            }
+
+
+            .section-title img {
+                width: 30px;
+            }
+
+
+            .dorm-item .photo-box,
+            .game-steam-item .photo-box,
+            .life-item .photo-box {
+                width: 180px;
+                height: 180px;
+            }
+
+
+            .card {
+                margin-bottom: 20px;
+                padding: 20px 15px;
+            }
+
+
+            .music-box {
+                left: 10px;
+                bottom: 140px;
+            }
+
+
+            .cd-rotate {
+                width: 70px;
+                height: 70px;
+            }
+
+
+            .cd-rotate img {
+                width: 55px;
+                height: 55px;
+            }
+
+
+            .submit-btn {
+                align-self: center;
+                width: 100%;
+                justify-content: center;
+            }
+
+
+            .message-form input,
+            .message-form textarea {
+                padding: 12px 15px;
+                font-size: 16px;
+            }
+
+
+            .sticker-nav {
+                width: 100%;
+                gap: 5px;
+            }
+
+
+            .sticker-item {
+                width: 65px;
+                height: 65px;
+            }
+
+
+            .sticker-item img {
+                width: 35px;
+            }
+
+
+            .essay-text {
+                font-size: 14px;
+                line-height: 1.8;
+            }
+
+
+            .essay-text p {
+                padding: 12px 15px;
+            }
+
+
+            .coupon-card {
+                padding: 25px;
+            }
+
+
+            .recipe-container h3 {
+                font-size: 20px;
+            }
+
+
+            .music-guide-content {
+                max-width: 280px;
+                padding: 30px 20px;
+            }
+
+
+            .music-guide-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<!-- 引导页 -->
+<div id="guidePage">
+    <div class="bg-float-guide" id="floatBgGuide"></div>
+    <div class="entry-card">
+        <h1>
+            <img src="yuguigou6.webp" alt="玉桂狗">
+            The Planet of Jade
+            <img src="yuguigou7.webp" alt="玉桂狗">
+        </h1>
+        <p class="question">你喜欢Jade吗？</p>
+        <div class="btn-group">
+            <button class="btn yes-btn" id="yesBtn">超级喜欢 💖</button>
+            <button class="btn no-btn" id="noBtn">一般般喜欢😶</button>
+        </div>
+    </div>
+
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">×</span>
+            <p id="modalText"></p>
+            <button class="modal-btn" id="modalBtn">确定</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 主页 -->
+<div id="mainPage">
+    <div class="bg-float-main" id="floatBgMain"></div>
+    <div class="bg-overlay"></div>
+
+
+    <div class="custom-toast" id="customToast"></div>
+
+
+    <div class="confirm-modal" id="confirmModal">
+        <div class="confirm-box">
+            <p id="confirmText">确定删除这条留言吗？</p>
+            <div class="confirm-btns">
+                <button class="confirm-yes" id="confirmYes">确定</button>
+                <button class="confirm-no" id="confirmNo">取消</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 音乐引导框 -->
+    <div class="music-guide-modal" id="musicGuideModal">
+        <div class="music-guide-content">
+            <span class="music-guide-icon">🎵</span>
+            <h2 class="music-guide-title">好像有点无聊啊</h2>
+            <p class="music-guide-desc">不如来个背景音乐吧？这样能更好地沉浸在我的星球里哦~</p>
+            <button class="music-guide-btn" id="musicGuideBtn">点击播放音乐</button>
+        </div>
+    </div>
+
+
+    <div class="intro-modal" id="introModal">
+        <div class="modal-content">
+            <div class="modal-photo">
+                <div class="photo-box photo-3-4">
+                    <img src="gerenzhao.jpg" alt="个人照片">
+                </div>
+            </div>
+            <div class="modal-info">
+                <h2><img src="yuguigou3.webp" alt="玉桂狗">你好呀，我的旅人✨</h2>
+                <p>hello！我是朱玉珠，06年摩羯座，enfp，就读于中国传媒大学汉语言专业。你可以叫我jade或者猪猪，这里是我的玉桂狗星球，藏着我的生活碎片、干饭日常、开黑时光，还有满满的治愈感</p>
+                <button class="enter-btn" id="enterBtn">进入玉桂狗星球</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="back-home" id="backHome">
+        <img src="yuguigou1.webp" alt="返回首页">
+        <p>返回首页</p>
+    </div>
+
+
+    <div class="music-box">
+        <div class="cd-tip">点击CD播放音乐</div>
+        <div class="cd-rotate" id="cd">
+            <img src="yuguigou1.webp" alt="玉桂狗CD">
+        </div>
+        <p>《你从未离去》 雪岭熊风</p>
+        <audio id="audio" loop>
+            <source src="yinyue.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+
+    <div class="page-container" id="pageContainer">
+        <div class="sticker-nav" id="stickerNav">
+            <div class="sticker-item" data-page="home">
+                <img src="yuguigou1.webp" alt="首页">
+				<div class="sticker-name-sm">首页</div>
+            </div>
+            <div class="sticker-item" data-page="dorm">
+                <img src="yuguigou7.webp" alt="宿舍">
+				<div class="sticker-name-sm">宿舍</div>
+            </div>
+            <div class="sticker-item" data-page="food">
+                <img src="yuguigou3.webp" alt="美食">
+				<div class="sticker-name-sm">美食</div>
+            </div>
+            <div class="sticker-item" data-page="game">
+                <img src="yuguigou4.webp" alt="游戏">
+				<div class="sticker-name-sm">游戏</div>
+            </div>
+            <div class="sticker-item" data-page="life">
+                <img src="yuguigou5.webp" alt="生活">
+				<div class="sticker-name-sm">生活碎片</div>
+            </div>
+            <div class="sticker-item" data-page="message">
+                <img src="yuguigou6.webp" alt="留言">
+				<div class="sticker-name-sm">留言</div>
+            </div>
+        </div>
+
+
+        <!-- 首页 -->
+        <section class="page-module active" id="home">
+            <div class="home-header">
+                <div class="home-info">
+                    <h2><img src="yuguigou3.webp" alt="玉桂狗">The Planet of Jade</h2>
+                    <p>你好呀，我的旅人，欢迎走进我的星球。我是jade，enfp（半i），摩羯座，地球online游戏已入坑20年，人美心善性格好，嘴馋手笨爱抱猫。</p>
+                    <p>我来自安徽，目前在北京上学，喜欢舍友、美食、游戏和记录生活碎片，跟舍友把日子过好比什么都重要！这里记录了我和6312室友的日常，愿你在这里收获可爱与温暖，把平凡的日子过得甜甜蜜蜜💖</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 宿舍 -->
+        <section class="page-module" id="dorm">
+            <div class="card">
+                <h2 class="section-title"><img src="yuguigou7.webp" alt="玉桂狗">6312宿舍</h2>
+                <div class="dorm-wrapper">
+                    <div class="dorm-item">
+                        <div class="photo-box"><img src="jitihezhao.jpg" alt="集体合照"></div>
+                        <div class="desc-text-box">hello，bb，欢迎光临6312！我们宿舍这群人能聚到一起，全是天赐良缘——那天我们五个都忘了选宿舍，所以被塞进了仅剩的一个宿舍。没事哒没事哒，虽然有位素未谋面的舍友刚开学就退学，虽然住的是四人寝爆改六人寝，虽然被分到了男生公寓，虽然每天上学比其他公寓女生步行路程多了十分钟，who care？（/(ㄒoㄒ)/~~）但是遇到了一群志（臭）同（味）投（相）合的好朋友。下面请允许我隆重的介绍她们。（排名不分主次，按年龄排序）</div>
+                    </div>
+                    <div class="dorm-item reverse">
+                        <div class="photo-box"><img src="sheyou1.jpg" alt="舍友1"></div>
+                        <div class="desc-text-box">首先，让我们欢迎AAA梆六美甲大王珍珍，此女是古希腊掌管美甲之神，古希腊赞美之神，B站忠实拥护者，诺贝尔拖延症终身荣誉获得者，灵魂舞者，网络激情对线者，那很XX了句式贴身携带者，6312行动倒数第一迅速者（如图所示）……跟她聊天最大的好处就是体验淘宝客服拟人态，激情速磕返老还童丹——体验幼师对话。甭管你做了什么，珍珍绝对360度夸赞，甭管她在做什么，都绝对回应、夸赞回应，你别管她听没听，反正是回了。</div>
+                    </div>
+                    <div class="dorm-item">
+                        <div class="photo-box"><img src="sheyou2.jpg" alt="舍友2"></div>
+                        <div class="desc-text-box">okok，不要拍了不要拍了，收费哈，美貌收费。这是我们的isfp——青海之花（目前男友位空缺中）人美嘴甜会说话，不过也太会说了。作为一个热心肠的好人，我第一次给她帮忙时她说"来来来，是不是想让我亲你一口"给我吓得屁滚尿流，城里人就是不一样哈！我们乡下人哪里见过这些！不过这个小姐姐最擅长熬夜背梗，好像此女把抖音在嘴里嚼了八九下咽了下去，五句话六个梗，所以衷心劝告：跟她聊天记得带上好搭子布洛芬——笑点经常像尿一样就流出来了……本人会笑得肚子疼（低声些，这难道光彩吗）。</div>
+                    </div>
+                    <div class="dorm-item reverse">
+                        <div class="photo-box"><img src="sheyou3.jpg" alt="舍友3"></div>
+                        <div class="desc-text-box">一个淡人、一个老实人、一个团支书、一颗果果正向你走来。我们两个简直榫遇到卯——两个人都拥有一键跟随功能，无论是11点的夜宵还是说走就走的旅行，一个人刚提起，另一个已经订好票。刚认识的时候，果果不语，只是一个人安安静静画了三天画；熟了之后，果果不语，只是一味邀请我玩原神、星露谷、我的世界、赛博朋克2077、崩铁、胡闹厨房、双人成行、双影奇境、饥荒……嗯，果果就是网传的老实人——无色无味但剧毒。她总是在我们聊天的时候一语激起千层浪，俗称，锐评。比如我有时候并不能理解她们的撒娇，"死男人"；在珍珍慢慢说话的时候，"老麻（三声）麻（轻声）儿"果果可能不怎么爱聊天，不过如果你邀请她打游戏的话，嗯，使命必达。</div>
+                    </div>
+                    <div class="dorm-item">
+                        <div class="photo-box"><img src="sheyou4.jpg" alt="舍友4"></div>
+                        <div class="desc-text-box">终于……一个全是P人的宿舍迎来了她们唯一的j人小宝宝——凡凡QWQ，魔丸中唯一的灵珠、海洋中唯一的陆地。刚认识的时候这个07的小宝宝甚至还是未成年，上大学体检还要去拿给班主任签字，打游戏还有未成年人限制。即使这样，她依然担起了宿舍长的重任，以一己之力努力拉动（提醒）整个宿舍的ddl（感动T T,我们就这样啃小）。这个小宝宝刚进入大学的时候还保留着老干部作息，早睡早起，不过这学期开始她就跟我们一样的美国作息了，时差终于调了回来，对此我们表示很欣慰，小宝宝终于进入大人的世界了。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 美食 -->
+        <section class="page-module" id="food">
+            <div class="card">
+                <h2 class="section-title"><img src="yuguigou1.webp" alt="玉桂狗">美食星球</h2>
+                <div class="food-grid">
+                    <div class="food-item">
+                        <div class="photo-box"><img src="meishi1.jpg" alt="甜品打卡"></div>
+                        <div class="desc-text-box">夯！这个必须给到夯！外婆馋小院烤肉，震撼美味！尤其是烤猪排，又香又嫩，恨不得把舌头咬掉。</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="photo-box"><img src="meishi2.jpg" alt="火锅探店"></div>
+                        <div class="desc-text-box">回味黑鸭煲，这含金量不必多言，北京最辣之菜，爱吃辣的人必不能错过，当真回味无穷</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="photo-box"><img src="meishi3.jpg" alt="奶茶日常"></div>
+                        <div class="desc-text-box">便宜好吃……三泉冷面的冷面一般，不过这个拉皮调的一绝，芝士玉米粒香甜可口，石锅拌饭口感丰富</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="photo-box"><img src="meishi4.jpg" alt="特色面食"></div>
+                        <div class="desc-text-box">这个是九龙冰室的叉烧溏心蛋饭，口感层次丰富，鲜香可口</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="photo-box"><img src="meishi5.jpg" alt="炸鸡小吃"></div>
+                        <div class="desc-text-box">网上说说得了，现实里谁不想急头白脸吃碗肥姨妈！</div>
+                    </div>
+                    <div class="food-item">
+                        <div class="photo-box"><img src="meishi6.jpg" alt="水果拼盘"></div>
+                        <div class="desc-text-box">海底捞……美味不必多说（还有小两口烧烤、玉林烤鸭、鼎元斋涮肉等等美味，篇幅有限，不再多言）</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 游戏 -->
+        <section class="page-module" id="game">
+            <div class="card">
+                <h2 class="section-title"><img src="yuguigou3.webp" alt="玉桂狗">游戏日常</h2>
+                <div class="game-wrapper">
+                    <div class="game-top-row">
+                        <div class="photo-box photo-16-9"><img src="wangzhe1.jpg" alt="王者截图1"></div>
+                        <div class="photo-box photo-16-9"><img src="wangzhe2.jpg" alt="王者截图2"></div>
+                        <div class="desc-text-box game-text-box">平时没事就喜欢打王者，不过随着年龄上涨，我能感觉到我的天赋正在逐渐消失……图2 是我的主页，可以添加好友，有空欢迎一起开黑~</div>
+                    </div>
+                    <div class="game-steam-wrapper">
+                        <div class="game-steam-item">
+                            <div class="photo-box"><img src="steam1.jpg" alt="Steam游戏1"></div>
+                            <div class="desc-text-box">偶尔跟果果一起玩steam上的小游戏，胡闹厨房真的好玩，不过这个冰面关卡也太难了……</div>
+                        </div>
+                        <div class="game-steam-item reverse">
+                            <div class="photo-box"><img src="steam2.jpg" alt="Steam游戏2"></div>
+                            <div class="desc-text-box">这是燕云十六声……嘿嘿，我也是开服玩家，不过这段时间退游了，如图是我貌美如花的少东家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 生活 -->
+        <section class="page-module" id="life">
+            <div class="card">
+                <h2 class="section-title"><img src="yuguigou5.webp" alt="玉桂狗">生活碎片</h2>
+                <div class="life-wrapper">
+                    <div class="life-item">
+                        <div class="photo-box"><img src="shenghuo1.jpg" alt="生活照1"></div>
+                        <div class="desc-text-box">这是人文辩论队！上图是刚进队的时候和家人们的合照，下图是我的战友们。上大学最开心的就是加入了人文辩论队，一起备赛、一起夺冠、一起聚餐……遇到一群志同道合的朋友是一种幸运。</div>
+                    </div>
+                    <div class="life-item reverse">
+                        <div class="photo-box"><img src="shenghuo2.jpg" alt="生活照2"></div>
+                        <div class="desc-text-box">我怀里的是Jerry！是我好朋友佳轩姐家的小布偶，超级乖超级萌，每次去佳轩姐家里撸猫都非常开心，世界上怎么有这么可爱的小猫！！！</div>
+                    </div>
+                    <div class="life-item">
+                        <div class="photo-box"><img src="shenghuo3.jpg" alt="生活照3"></div>
+                        <div class="desc-text-box">图中是本人亲手下厨的成果，嘿嘿。给朋友做饭是一种幸福，我喜欢给她们做一些东西，几个人喝点小饮料，在好朋友家里天南海北说说笑笑，是大学中的幸福时刻~</div>
+                    </div>
+                    <div class="life-item reverse">
+                        <div class="photo-box"><img src="shenghuo4.jpg" alt="生活照4"></div>
+                        <div class="desc-text-box">每每走在天桥上都是疲惫与劳累，不过偶然看到好风景，想想也不虚此行</div>
+                    </div>
+                    <div class="life-item">
+                        <div class="photo-box"><img src="shenghuo5.jpg" alt="生活照5"></div>
+                        <div class="desc-text-box">世界上不能没有好朋友！远在异地的好朋友偶然的关心总是让人心里暖暖的。被人牵挂也是种幸福~</div>
+                    </div>
+                    <div class="life-item reverse">
+                        <div class="photo-box"><img src="shenghuo6.jpg" alt="生活照6"></div>
+                        <div class="desc-text-box">嘿嘿，这是我上三D思维与造型课（×捏泥巴课）的结课作品。我的老师沉思良久，表示有一种荒诞的艺术感……</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 留言 -->
+        <section class="page-module" id="message">
+            <div class="card message-card">
+                <div class="cinnamoroll-stickers">
+                    <h3 class="stickers-title">我的玉桂狗贴画</h3>
+                    <p class="stickers-hint">💡不白来，都不白来哈，点击贴纸可以解锁隐藏彩蛋</p>
+                    <div class="stickers-grid">
+                        <div class="sticker-item-sm" onclick="openEgg(1)">
+                            <img src="yuguigou1.webp" alt="随笔">
+                            <div class="sticker-name-sm">点我</div>
+                            <div class="sticker-unlock-badge">🎁</div>
+                        </div>
+                        <div class="sticker-item-sm" onclick="openEgg(2)">
+                            <img src="yuguigou7.webp" alt="Jerry">
+                            <div class="sticker-name-sm">点这个？</div>
+                            <div class="sticker-unlock-badge">🎁</div>
+                        </div>
+                        <div class="sticker-item-sm" onclick="openEgg(3)">
+                            <img src="yuguigou3.webp" alt="照片">
+                            <div class="sticker-name-sm">还是这个？</div>
+                            <div class="sticker-unlock-badge">🎁</div>
+                        </div>
+                        <div class="sticker-item-sm" onclick="openEgg(4)">
+                            <img src="yuguigou4.webp" alt="奶茶券">
+                            <div class="sticker-name-sm">111</div>
+                            <div class="sticker-unlock-badge">🎁</div>
+                        </div>
+                        <div class="sticker-item-sm" onclick="openEgg(5)">
+                            <img src="yuguigou5.webp" alt="秘籍">
+                            <div class="sticker-name-sm">选我！</div>
+                            <div class="sticker-unlock-badge">🎁</div>
+                        </div>
+                        <div class="sticker-item-sm" onclick="openEgg(6)">
+                            <img src="yuguigou6.webp" alt="火鸡面">
+                            <div class="sticker-name-sm">点我点我</div>
+                            <div class="sticker-unlock-badge">🎁</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h2 class="section-title"><img src="yuguigou5.webp" alt="玉桂狗">留言板</h2>
+                <form class="message-form" id="messageForm">
+                    <input type="text" id="nickname" placeholder="你的昵称~" required>
+                    <textarea id="content" placeholder="写下你想对我说的话吧💖" required></textarea>
+                    <button type="submit" class="submit-btn" id="submitBtn">💌 提交留言</button>
+                </form>
+                <div class="message-list" id="messageList"></div>
+            </div>
+        </section>
+
+
+        <footer class="footer">
+            <p>The Planet of Jade 我不再迷茫~思念是唯一的行囊~</p>
+        </footer>
+    </div>
+</div>
+
+
+<!-- 照片放大灯箱 -->
+<div class="photo-lightbox" id="photoLightbox">
+    <div class="lightbox-content">
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    </div>
+</div>
+
+
+<!-- 彩蛋模态框 -->
+<!-- 彩蛋1: 你猜 -->
+<div class="easter-egg-modal" id="egg1Modal">
+    <div class="egg-content">
+        <button class="egg-close" onclick="closeEgg(1)">✕</button>
+        <div class="egg-unlock-ani">
+            <span class="unlock-icon">🎉</span>
+            <h2>恭喜你解锁</h2>
+            <p>Jade大王随笔一篇</p>
+        </div>
+        <div class="egg-body">
+            <div class="essay-container">
+                <h3>《屌丝的日常》</h3>
+                <div class="essay-text">
+                    <p>“你知道吗，你现在就像个屌丝”果果眉头皱了一下，有点费解的看着我，“女屌丝”，她又补充了一句。
+她说话的时候我正懒懒的靠在宿舍门后，撩起上衣摸肚皮，刚才吃的有点撑，而且宿舍有点热。听到的时候我愣了一下，大脑反应了一下，然后发出美妙的赞叹，“我c你真牛b，这个词简直为我量身定做”此后我在宿舍里的尊称继“死男人”“流氓”“神经病”之后又多了一个。</p>
+                    <p>果果是个很标准的淡人，做什么事情都淡淡的，情绪很稳定，说话也淡淡、慢慢的，跟她开玩笑也是。今天下午我推门进来的时候她在削芒果。“这么快就吃啦”芒果是我中午刚给她的。她皱了皱眉，“对，嗯，但它有点黑头”。“哦哟~非洲人民移民亚洲了？”该死，嘴总比脑子快，好地狱的话。不过她没有任何反应，淡淡的。好吧。我尴尬的摸了摸鼻子。（后来我们再讨论这件事情，她表示是当时没听懂，看吧，其实我的冷笑话也不是这么冷）</p>
+                    <p>我可能是过的太舒服了，没骨头。走路要勾肩搭背借个力，坐下要大敞着腿杵个手，背包站着要驼背弯只腿。但其实仔细一想也没那么没劲儿，毕竟走路的时候爱踮脚，上个楼梯要跳着蹦着两格，坐下上课必定要打开自动马达。在前面写舍友对我的尊称时，有的朋友可能会说了，那你跟你这舍友关系也不咋样啊，这些词说的有些过分了吧。并非啊朋友，并非浪得虚名，因为每次犯贱被骂的时候我捂脸不是在哭，是在爽。QWQ</p>
+                    <p>珍珍今晚疯狂在分享她的心理成长互动体验课。她们在玩cosplay，游戏规则是：一个人随意扮演角色，第二个人扮演的角色要跟第一个相关，以此类推。有一把说一个人开头扮演的树，另一个人立马就扮演了光头强，看的出来这门课选课的同学很年轻化啊，不出意外的有人扮演了熊大熊二。她让我猜她扮演了什么。“涂涂？” “不对” “哇塞，你竟然没有选择自己的本命英雄吗？老麻麻儿~” “我也没有这么晕吧？！！”她发出尖叫 “那吉吉？” “不对” “蹦蹦？”“不对” “萝卜头？” “哈哈，不对！” 我把森林里动物猜了个遍，最后她说李老板，好吧。她真的很有商业头脑</p>
+                    <p>很快她又给我分享了另一把，说她开头扮演了羊，接着就有人扮演了农场主、黑奴、农场主的鞭子、白人警察，白人警察出现后，立马有人扮演了死神以及死神的镰刀（地狱这块./） 让我比较诧异的是她说还有人扮演了羊屎、羊尿以及羊毛？我没忍住。问她难道没人扮演羊毛衫吗。她说没有。好吧，pity.
+不过她说扮演的时候有人发出疑问，为什么这三样东西会在一个地方。
+可能是便秘吧，我想，顺嘴说了出来。</p>
+                    <p>“不要这么猎奇啊”珍珍再次发出尖叫。
+我便秘的时候很痛苦，会拽头发，虽然这个行为并不是便秘的药方，但是能缓解焦虑。于是我的头发大把脱落。我开始寻求除了便秘之外的增发秘方。便秘这个病症真是痛苦到谁都忍不了。羊也一样。——Jade 💖</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 彩蛋2: 选这个？ -->
+<div class="easter-egg-modal" id="egg2Modal">
+    <div class="egg-content">
+        <button class="egg-close" onclick="closeEgg(2)">✕</button>
+        <div class="egg-unlock-ani">
+            <span class="unlock-icon">🎉</span>
+            <h2>恭喜你解锁</h2>
+            <p>Jerry萌照合集：人类，你也为咪而着迷吧~</p>
+        </div>
+        <div class="egg-body">
+            <div class="gallery-container">
+                <div class="photo-gallery-6">
+                    <div class="gallery-photo" onclick="openLightbox('jerry1.jpg')">
+                        <img src="jerry1.jpg" alt="Jerry1">
+                        <p>Jerry小可爱</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jerry2.jpg')">
+                        <img src="jerry2.jpg" alt="Jerry2">
+                        <p>乖乖Jerry</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jerry3.jpg')">
+                        <img src="jerry3.jpg" alt="Jerry3">
+                        <p>你也为咪着迷吧……</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jerry4.jpg')">
+                        <img src="jerry4.jpg" alt="Jerry4">
+                        <p>贴贴Jerry</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jerry5.jpg')">
+                        <img src="jerry5.jpg" alt="Jerry5">
+                        <p>超乖的</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jerry6.jpg')">
+                        <img src="jerry6.jpg" alt="Jerry6">
+                        <p>Jerry~</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 彩蛋3: 还是这个？ -->
+<div class="easter-egg-modal" id="egg3Modal">
+    <div class="egg-content">
+        <button class="egg-close" onclick="closeEgg(3)">✕</button>
+        <div class="egg-unlock-ani">
+            <span class="unlock-icon">🎉</span>
+            <h2>恭喜你解锁</h2>
+            <p>Jade照片合集</p>
+        </div>
+        <div class="egg-body">
+            <div class="gallery-container">
+                <div class="photo-gallery-6">
+                    <div class="gallery-photo" onclick="openLightbox('jade1.jpg')">
+                        <img src="jade1.jpg" alt="Jade1">
+                        <p>Jade1</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jade2.jpg')">
+                        <img src="jade2.jpg" alt="Jade2">
+                        <p>Jade2</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jade3.jpg')">
+                        <img src="jade3.jpg" alt="Jade3">
+                        <p>Jade3</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jade4.jpg')">
+                        <img src="jade4.jpg" alt="Jade4">
+                        <p>Jade4</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jade5.jpg')">
+                        <img src="jade5.jpg" alt="Jade5">
+                        <p>只是体验</p>
+                    </div>
+                    <div class="gallery-photo" onclick="openLightbox('jade6.jpg')">
+                        <img src="jade6.jpg" alt="Jade6">
+                        <p>我爱中国</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 彩蛋4: 4 -->
+<div class="easter-egg-modal" id="egg4Modal">
+    <div class="egg-content">
+        <button class="egg-close" onclick="closeEgg(4)">✕</button>
+        <div class="egg-unlock-ani">
+            <span class="unlock-icon">🎉</span>
+            <h2>恭喜你解锁</h2>
+            <p>一张奶茶券！</p>
+        </div>
+        <div class="egg-body">
+            <div class="coupon-container">
+                <div class="coupon-card">
+                    <div class="coupon-header">
+                        <span class="coupon-title">奶茶券</span>
+                        <span class="coupon-emoji">🧋</span>
+                    </div>
+                    <div class="coupon-content">
+                        <p class="coupon-text">凭借此券可以请<span>Jade大王</span>喝奶茶一杯！</p>
+                        <p class="coupon-rules">• 不限时间地点<br />• 不限奶茶种类（最好来自奶茶秘籍）<br />• 你买单<br />• 记得和我分享你的故事哦~</p>
+                        <p class="coupon-footer">有效期：永久 💖</p>
+                    </div>
+                    <div class="coupon-number">#VIP001</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 彩蛋5: 5 -->
+<div class="easter-egg-modal" id="egg5Modal">
+    <div class="egg-content">
+        <button class="egg-close" onclick="closeEgg(5)">✕</button>
+        <div class="egg-unlock-ani">
+            <span class="unlock-icon">🎉</span>
+            <h2>恭喜你解锁</h2>
+            <p>Jade大王奶茶秘籍一本</p>
+        </div>
+        <div class="egg-body">
+            <div class="recipe-container">
+                <h3>☕ Jade的奶茶秘籍 ☕</h3>
+                <!-- ========== 修复3：优化奶茶秘籍排版 ========== -->
+                <div class="recipe-card">
+                    <p>最懂蜜雪冰城的人比较懂棒打鲜橙</p>
+                    <p>最懂喜茶的人比较懂轻芝多肉葡萄</p>
+                    <p>最懂一点点的人比较懂蔓越莓奶绿</p>
+                    <p>最懂茶百道的人比较懂铁观音奶冻</p>
+                    <p>最懂沪上阿姨的人比较懂厚芋泥波波</p>
+                    <p>最懂coco的人比较懂青稞芋泥鲜奶</p>
+                    <p>最懂霸王茶姬的人比较懂春日桃桃</p>
+                    <p>最懂爷爷不泡茶的人比较懂桃桃双皮奶</p>
+                    <p>最懂古茗的人比较懂布丁西米露</p>
+                </div>
+                <div class="recipe-tips">
+                    <p>💡 <strong>小贴士：</strong> 不同季节选不同的奶茶，春夏喝清淡的，秋冬喝浓郁的~</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 彩蛋6: 6） -->
+<div class="easter-egg-modal" id="egg6Modal">
+    <div class="egg-content">
+        <button class="egg-close" onclick="closeEgg(6)">✕</button>
+        <div class="egg-unlock-ani">
+            <span class="unlock-icon">🎉</span>
+            <h2>恭喜你得到了</h2>
+            <p>一碗火鸡面！</p>
+        </div>
+        <div class="egg-body">
+            <div class="food-container">
+                <div class="food-card">
+                    <div class="food-warning">
+                        <p>⚠️ <strong>重要通知</strong> ⚠️</p>
+                    </div>
+                    <div class="food-message">
+                        <p>哦不好意思！😅</p>
+                        <p>Jade大王收到这碗火鸡面后，非常担心你的胃会有负担...</p>
+                        <p>所以...</p>
+                        <p><strong style="font-size: 18px; color: var(--secondary);">已经替你解决了！🍜</strong></p>
+                    </div>
+                    <div class="food-image" onclick="openLightbox('huojimian.jpg')">
+                        <img src="huojimian.jpg" alt="火鸡面">
+                    </div>
+                    <div class="image-caption">被Jade吃掉的火鸡面~</div>
+                    <div class="food-footer">
+                        <p>宝贝下次再选，记得选一个好消化的呀~ 💖</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 10px;">—— 为你好着想的Jade大王</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// ===== 引导页星星 =====
+function createGuideStars(){
+    const c = document.getElementById('floatBgGuide');
+    const s = ['⭐','✨','🌟'];
+    for(let i=0;i<25;i++){
+        let el = document.createElement('div');
+        el.className = 'float-item';
+        el.textContent = s[Math.floor(Math.random()*s.length)];
+        el.style.cssText = `font-size:${Math.random()*20+8}px;left:${Math.random()*100}%;animation:float ${Math.random()*5+12}s linear infinite;animation-delay:${Math.random()*5}s`;
+        c.appendChild(el);
+    }
+}
+createGuideStars();
+
+
+// ===== 主页星星 =====
+function createMainStars(){
+    const c = document.getElementById('floatBgMain');
+    const s = ['⭐','✨','🌟'];
+    c.innerHTML = '';
+    for(let i=0;i<35;i++){
+        let el = document.createElement('div');
+        el.className = 'float-item';
+        el.textContent = s[Math.floor(Math.random()*s.length)];
+        el.style.cssText = `font-size:${Math.random()*25+8}px;left:${Math.random()*100}%;animation:float ${Math.random()*8+10}s linear infinite;animation-delay:${Math.random()*6}s`;
+        c.appendChild(el);
+    }
+}
+
+
+// ===== 引导页逻辑 =====
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const modal = document.getElementById('modal');
+const guidePage = document.getElementById('guidePage');
+const mainPage = document.getElementById('mainPage');
+
+
+yesBtn.onclick = ()=>{
+    modal.style.display='flex';
+    document.getElementById('modalText').textContent='💖 欢迎来到Jade的玉桂狗小星球～';
+    document.getElementById('modalBtn').onclick=document.getElementById('modalClose').onclick=()=>{
+
+modal.style.display='none';
+        guidePage.style.display='none';
+        mainPage.style.display='block';
+        document.body.style.overflow = "auto";
+        createMainStars();
+        setTimeout(()=>document.getElementById('introModal').classList.add('active'),500);
+    };
+};
+
+
+noBtn.onclick = ()=>{
+    modal.style.display='flex';
+    document.getElementById('modalText').textContent='😢 Jade很伤心，拒绝了你的访问';
+    document.getElementById('modalBtn').onclick=document.getElementById('modalClose').onclick=()=>{modal.style.display='none';};
+};
+
+
+modal.onclick = e=>e.target===modal&&(modal.style.display='none');
+
+
+// ===== 提示框 =====
+const toast = document.getElementById('customToast');
+function showToast(t){
+    toast.textContent=t;
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),1500);
+}
+
+
+// ===== 确认框 =====
+const cfm = document.getElementById('confirmModal');
+let cfmCb;
+function showConfirm(t,cb){
+    document.getElementById('confirmText').textContent=t;
+    cfm.classList.add('show');
+    cfmCb=cb;
+}
+document.getElementById('confirmYes').onclick=()=>{
+    cfm.classList.remove('show');
+    cfmCb&&cfmCb(true);
+};
+document.getElementById('confirmNo').onclick=()=>{
+    cfm.classList.remove('show');
+    cfmCb&&cfmCb(false);
+};
+
+
+// ===== 介绍模态框 =====
+const intro = document.getElementById('introModal');
+document.getElementById('enterBtn').onclick=()=>{
+    intro.classList.remove('active');
+    document.getElementById('pageContainer').classList.add('active');
+    // 显示音乐引导框
+    setTimeout(()=>{
+        document.getElementById('musicGuideModal').classList.add('active');
+    }, 500);
+};
+intro.onclick=e=>e.target===intro&&intro.classList.remove('active');
+
+
+// ===== 音乐引导框 =====
+const musicGuideModal = document.getElementById('musicGuideModal');
+const musicGuideBtn = document.getElementById('musicGuideBtn');
+musicGuideBtn.onclick=()=>{
+    musicGuideModal.classList.remove('active');
+    playMusic();
+    // 显示贴纸
+    showStickers();
+};
+musicGuideModal.onclick = e=>e.target===musicGuideModal&&musicGuideModal.classList.remove('active');
+
+
+// ===== 显示贴纸 =====
+function showStickers(){
+    const stickerNav = document.getElementById('stickerNav');
+    stickerNav.classList.add('show');
+}
+
+
+// ===== 页面切换 =====
+const stickers = document.querySelectorAll('.sticker-item');
+const pages = document.querySelectorAll('.page-module');
+const back = document.getElementById('backHome');
+
+
+stickers.forEach(i=>i.onclick=()=>{
+    let t = i.dataset.page;
+    pages.forEach(p=>p.classList.remove('active'));
+    document.getElementById(t).classList.add('active');
+    back.classList.toggle('active',t!=='home');
+    window.scrollTo({top:0,behavior:'smooth'});
+});
+
+
+back.onclick=()=>{
+    pages.forEach(p=>p.classList.remove('active'));
+    document.getElementById('home').classList.add('active');
+    back.classList.remove('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+};
+
+
+// ===== 音乐播放 =====
+const cd = document.getElementById('cd');
+const audio = document.getElementById('audio');
+function playMusic(){
+    if(audio.paused){
+        audio.play()
+            .then(()=>{
+                cd.style.animationPlayState='running';
+                cd.classList.add('playing');
+                showToast('🎵 正在播放音乐');
+            })
+            .catch(()=>showToast('⚠️ 播放失败'));
+    }
+}
+cd.onclick=()=>{
+    if(audio.paused){
+        audio.play()
+            .then(()=>{
+                cd.style.animationPlayState='running';
+                cd.classList.add('playing');
+                showToast('🎵 正在播放音乐');
+            })
+            .catch(()=>showToast('⚠️ 播放失败'));
+    }else{
+        audio.pause();
+        cd.style.animationPlayState='paused';
+        cd.classList.remove('playing');
+        showToast('⏸️ 已暂停');
+    }
+};
+audio.onended = ()=>{
+    cd.style.animationPlayState='paused';
+    cd.classList.remove('playing');
+};
+
+
+// ===== 照片放大功能 =====
+const photoLightbox = document.getElementById('photoLightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+
+
+function openLightbox(imgSrc){
+    lightboxImg.src = imgSrc;
+    photoLightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+
+function closeLightbox(){
+    photoLightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+ // 点击图片放大
+document.querySelectorAll('.photo-box img').forEach(img => {
+    img.style.cursor = 'pointer';
+    img.onclick = (e) => {
+        e.stopPropagation();
+        openLightbox(img.src);
+    };
+});
+
+
+// 点击背景关闭
+photoLightbox.onclick = (e) => {
+    if(e.target === photoLightbox){
+        closeLightbox();
+    }
+};
+
+
+// 按ESC关闭
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+        closeLightbox();
+    }
+});
+
+
+// ===== 彩蛋系统 =====
+function openEgg(eggId){
+    const modal = document.getElementById(`egg${eggId}Modal`);
+    if(modal){
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        showToast(`✨ 解锁了彩蛋${eggId}！`);
+        createConfetti();
+    }
+}
+
+
+function closeEgg(eggId){
+    const modal = document.getElementById(`egg${eggId}Modal`);
+    if(modal){
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+ // 点击背景关闭彩蛋
+document.querySelectorAll('.easter-egg-modal').forEach(modal => {
+    modal.onclick = (e) => {
+        if(e.target === modal){
+            const eggId = modal.id.replace('egg', '').replace('Modal', '');
+            closeEgg(eggId);
+        }
+    };
+});
+
+
+// ===== 彩纸效果 =====
+function createConfetti(){
+    const colors = ['#ffb6c1', '#87ceeb', '#ffd700', '#ff69b4', '#6cc24a'];
+    for(let i=0;i<30;i++){
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            border-radius: 50%;
+            left: ${Math.random() * 100}%;
+            top: -10px;
+            pointer-events: none;
+            z-index: 99998;
+            box-shadow: 0 0 10px currentColor;
+            animation: confettiFall ${3 + Math.random() * 2}s linear forwards;
+        `;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
+    }
+}
+
+
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes confettiFall {
+        to {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+
+ // ===== 时间戳 =====
+function now(){
+    const d=new Date();
+    return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+
+ // ===== 默认留言 =====
+const defaultMsg = [
+    {nickname:'室友小A',content:'祝我们6312永远开开心心！',time:now(),like:0},
+    {nickname:'玉桂狗爱好者',content:'你的星球也太可爱啦吧～',time:now(),like:0},
+    {nickname:'游戏搭子',content:'下次一起开黑上大分！',time:now(),like:0}
+];
+
+
+ // ===== 加载留言 =====
+function loadMsg(){
+    let ms = JSON.parse(localStorage.getItem('messages'))||[...defaultMsg];
+    const list = document.getElementById('messageList');
+    list.innerHTML='';
+    if(!ms.length){
+        list.innerHTML='<div class="empty-msg">还没有留言哦，快来写下第一句祝福吧💖</div>';
+        return;
+    }
+    ms.forEach((m,i)=>{
+        let item = document.createElement('div');
+        item.className='message-item';
+        item.innerHTML=`<div class="msg-avatar"><img src="yuguigou1.webp"></div><div class="msg-body"><div class="msg-head"><div class="msg-nickname">${m.nickname}</div><div class="msg-time">${m.time}</div></div><div class="msg-content">${m.content}</div><div class="msg-actions"><button class="like-btn" data-i="${i}">❤️ ${m.like}</button><button class="del-btn" data-i="${i}">🗑️ 删除</button></div></div>`;
+        list.appendChild(item);
+    });
+
+
+    document.querySelectorAll('.like-btn').forEach(b=>b.onclick=()=>{
+        ms[b.dataset.i].like++;
+        localStorage.setItem('messages',JSON.stringify(ms));
+        loadMsg();
+    });
+
+
+    document.querySelectorAll('.del-btn').forEach(b=>b.onclick=()=>{
+        showConfirm('确定删除这条留言吗？',r=>{
+            if(r){
+                ms.splice(b.dataset.i,1);
+                localStorage.setItem('messages',JSON.stringify(ms));
+                loadMsg();
+                showToast('删除成功 ✓');
+            }
+        });
+    });
+}
+loadMsg();
+
+
+ // ===== 提交留言 =====
+document.getElementById('messageForm').onsubmit=e=>{
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled=true;
+    const nn = document.getElementById('nickname').value.trim();
+    const ct = document.getElementById('content').value.trim();
+
+
+    if(!nn||!ct){
+        showToast('请填写完整信息');
+        btn.disabled=false;
+        return;
+    }
+
+
+    let ms = JSON.parse(localStorage.getItem('messages'))||[...defaultMsg];
+    ms.unshift({nickname:nn,content:ct,time:now(),like:0});
+    localStorage.setItem('messages',JSON.stringify(ms));
+    loadMsg();
+    e.target.reset();
+    showToast('留言成功啦💖');
+    setTimeout(()=>btn.disabled=false,1000);
+};
+
+// ===== 运行时优化：为所有图片启用 lazy loading（非破坏性） =====
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+        }
+    });
+});
+</script>
+</body>
+</html>
